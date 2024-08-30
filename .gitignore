@@ -1,0 +1,8 @@
+.imported_roles/
+.idea/
+.ec2_inventory/
+*.iml
+*.retry
+*.DS_Store
+.vagrant
+*.log
