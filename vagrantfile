@@ -12,6 +12,10 @@ Vagrant.configure("2") do |config|
   # Disable automatic box update checking.
   config.vm.box_check_update = false
   
+  # Enabling Host Manager to rename VMs
+  config.hostmanager.enabled = true 
+  config.hostmanager.manage_host = true
+  
   # Provision Master Nodes
   (1..NUM_MASTER_NODE).each do |i|
       config.vm.define "master0#{i}" do |node|
