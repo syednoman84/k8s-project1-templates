@@ -6,7 +6,6 @@ echo "----------------------------------"
 echo "[TASK 1] show whoami"
 echo "----------------------------------"
 whoami
-systemctl disable --now ufw >/dev/null 2>&1
 
 echo "----------------------------------"
 echo "[TASK 2] Stop and Disable firewall"
@@ -14,19 +13,31 @@ echo "----------------------------------"
 systemctl disable --now ufw >/dev/null 2>&1
 
 echo "----------------------------------"
-echo "[TASK 3] Letting iptables see bridged traffic"
+echo "[TASK 3] Disable swap"
+echo "----------------------------------"
+sudo swapoff -a
+
+echo "----------------------------------"
+echo "[TASK 4] Keeps the swaf off during reboot"
+echo "----------------------------------"
+(crontab -l 2>/dev/null; echo "@reboot /sbin/swapoff -a") | crontab - || true
+sudo apt-get update -y
+
+
+echo "----------------------------------"
+echo "[TASK 5] Letting iptables see bridged traffic"
 echo "----------------------------------"
 modprobe br_netfilter
 
 echo "----------------------------------"
-echo "[TASK 4] Enable and Load Kernel modules"
+echo "[TASK 6] Enable and Load Kernel modules"
 echo "----------------------------------"
 cat >>/etc/modules-load.d/k8s.conf<<EOF
 br_netfilter
 EOF
 
 echo "----------------------------------"
-echo "[TASK 5] Add Kernel settings"
+echo "[TASK 7] Add Kernel settings"
 echo "----------------------------------"
 cat >>/etc/sysctl.d/k8s.conf<<EOF
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -35,7 +46,7 @@ EOF
 sysctl --system
 
 echo "----------------------------------"
-echo "[TASK 6] Installing docker"
+echo "[TASK 8] Installing docker"
 echo "----------------------------------"
 apt-get update
 apt-get install -y \
@@ -52,7 +63,7 @@ apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io -y
 
 echo "----------------------------------"
-echo "[TASK 7] Configure the Docker daemon, in particular to use systemd for the management of the container’s cgroups."
+echo "[TASK 9] Configure the Docker daemon, in particular to use systemd for the management of the container’s cgroups."
 echo "----------------------------------"
 mkdir /etc/Docker
 cat >>/etc/docker/daemon.json<<EOF
@@ -80,13 +91,13 @@ systemctl restart docker
 # echo "CRI runtime installed successfully"
 
 echo "----------------------------------"
-echo "[TASK 8] Installing dependencies for k8s"
+echo "[TASK 10] Installing dependencies for k8s"
 echo "----------------------------------"
 apt-get update
 apt-get install -y apt-transport-https ca-certificates curl gpg -y
 
 echo "----------------------------------"
-echo "[TASK 9] Installing k8s"
+echo "[TASK 11] Installing k8s"
 echo "----------------------------------"
 # In releases older than Debian 12 and Ubuntu 22.04, directory /etc/apt/keyrings does not exist by default, 
 # and it should be created before the curl command.
@@ -102,6 +113,17 @@ echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 
 # Update the apt package index, install kubelet, kubeadm and kubectl, and pin their version:
 sudo apt-get update
+# Note that you can provide the versions to following command as well if you want to install any particular versions
 sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
+
+
+echo "----------------------------------"
+echo "[TASK 12] Add the node IP to KUBELET_EXTRA_ARGS"
+echo "----------------------------------"
+sudo apt-get install -y jq
+local_ip="$(ip --json addr show eth0 | jq -r '.[0].addr_info[] | select(.family == "inet") | .local')"
+cat > /etc/default/kubelet << EOF
+KUBELET_EXTRA_ARGS=--node-ip=$local_ip
+EOF
 

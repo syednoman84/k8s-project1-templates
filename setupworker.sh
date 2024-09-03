@@ -1,6 +1,10 @@
 #!/bin/bash
 
-echo "[TASK 1] Join node to Kubernetes Cluster"
+echo "[Task 1] Remove existing containerd config"
+rm /etc/containerd/config.toml
+systemctl restart containerd
+
+echo "[TASK 2] Join node to Kubernetes Cluster"
 cat >>~/.ssh/id_rsa<<EOF
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA1VbMFF4ddcW5/Frbo9I2XhLQlxpW31N3j/TSiAM44+R9yIGc
@@ -31,11 +35,11 @@ o0gwlCqbzGbjRK0vHHkyZwUCaxp4/f46ogEm3kVtVHACm26Vkt0J
 -----END RSA PRIVATE KEY-----
 EOF
 
-echo "[TASK 2] Change private key permission"
+echo "[TASK 3] Change private key permission"
 chmod 400 ~/.ssh/id_rsa
 
-echo "[TASK 3] Pull cluster connection token"
+echo "[TASK 4] Pull cluster connection token"
 scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@192.168.56.2:/joincluster.sh /joincluster.sh
 
-echo "[Task 4] Join the cluster"
+echo "[Task 5] Join the cluster"
 bash /joincluster.sh
