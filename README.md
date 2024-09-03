@@ -20,4 +20,5 @@ Steps:
 1. Vagrantfile
 2. network-docker-k8s-installation.sh on all VMs
 3. setupmaster.sh on master node
-4. setupworker.sh on all worker nodes
+4. run validation commands from validations.sh
+5. setupworker.sh on all worker nodes
