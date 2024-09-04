@@ -65,6 +65,7 @@ apt-get install docker-ce docker-ce-cli containerd.io -y
 echo "----------------------------------"
 echo "[TASK 9] Configure the Docker daemon, in particular to use systemd for the management of the container’s cgroups."
 echo "----------------------------------"
+rm -rf /etc/Docker
 mkdir /etc/Docker
 cat >>/etc/docker/daemon.json<<EOF
 {
