@@ -37,7 +37,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 echo "----------------------------------"
 echo "[TASK 5] Deploy Weave network"
 echo "----------------------------------"
-kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
 
 echo "----------------------------------"
 echo "[TASK 6] Generate and save cluster join command to /joincluster.sh"
@@ -57,3 +57,8 @@ echo "----------------------------------"
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
+
+echo "----------------------------------"
+echo "[TASK 9] Verify K8s Cluster"
+echo "----------------------------------"
+kubectl get pods -n kube-system -o wide
