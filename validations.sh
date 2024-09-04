@@ -238,6 +238,8 @@ kubectl get po -n kube-system
 kubectl get all
 kubectl get nodes
 kubectl exec <podname> -it -- /bin/sh (to connect to pod as ssh)
+kubectl get nodes -o wide (IPs of all nodes including master)
+kubectl get services -o wide (IPs and Ports of all services)
 
 # to see the cluster name
 # This command will Check all possible clusters, as you know .KUBECONFIG may have multiple contexts
