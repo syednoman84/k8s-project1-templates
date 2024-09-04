@@ -29,6 +29,7 @@ mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
+# Commented out the network plugin Calico and enabled the Weave Network because Calico controller was failing after deployment
 # echo "----------------------------------"
 # echo "[TASK 5] Deploy Calico network"
 # echo "----------------------------------"
