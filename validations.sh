@@ -238,6 +238,12 @@ kubectl get po -n kube-system
 kubectl get all
 kubectl get nodes
 kubectl exec <podname> -it -- /bin/sh (to connect to pod as ssh)
+
+# to see the cluster name
+# This command will Check all possible clusters, as you know .KUBECONFIG may have multiple contexts
+kubectl config view -o jsonpath='{"Cluster name\tServer\n"}{range .clusters[*]}{.name}{"\t"}{.cluster.server}{"\n"}{end}'
+
+
 To delete metrics-server:
 kubectl delete service/metrics-server -n  kube-system
 kubectl delete deployment.apps/metrics-server  -n  kube-system
