@@ -30,3 +30,5 @@ Refer to https://github.com/syednoman84/reference-guide/blob/master/PROJECTS_REA
 
 1. Metrics API Server installation
 2. Dashboard installation
+3. ConfigMap
+4. Communication between microservices to avoid all base api urls and ports changes from one deployment to another
